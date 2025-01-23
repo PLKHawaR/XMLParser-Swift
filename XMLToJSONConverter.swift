@@ -18,7 +18,6 @@ class ParseXMLDataToJson: NSObject, XMLParserDelegate {
     func parseXMLData() -> String {
         parser.parse()
         
-        // Do all below steps serially otherwise it may lead to wrong result
         for i in self.elementArr{
             if str.contains("\(i)@},\"\(i)\":"){
                 if !self.arrayElementArr.contains(i){
@@ -71,20 +70,19 @@ class ParseXMLDataToJson: NSObject, XMLParserDelegate {
             //print("key: ",k,"value: ",v)
             attributeCount = attributeCount - 1
             let comma = attributeCount > 0 ? "," : ""
-            self.str = "\(self.str)\"_\(k)\":\"\(v)\"\(comma)" // add _ for key to differentiate with attribute key type
+            self.str = "\(self.str)\"_\(k)\":\"\(v)\"\(comma)" 
         }
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         if self.str.last == "{"{
             self.str.removeLast()
-            self.str = "\(self.str)\"\(string)\"#" // insert pattern # to detect found characters added
+            self.str = "\(self.str)\"\(string)\"#" 
         }
     }
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
-        //print("\n End elementName \n",elementName)
         if self.str.last == "#"{ // Detect pattern #
             self.str.removeLast()
         }else{
@@ -94,17 +92,15 @@ class ParseXMLDataToJson: NSObject, XMLParserDelegate {
 }
 
 extension String{
-    // remove amp; from string
+    
 func removeAMPSemicolon() -> String{
     return replacingOccurrences(of: "amp;", with: "")
 }
 
-// replace "&" with "And" from string
 func replaceAnd() -> String{
     return replacingOccurrences(of: "&", with: "And")
 }
 
-// replace "\n" with "" from string
 func removeNewLine() -> String{
     return replacingOccurrences(of: "\n", with: "")
 }
